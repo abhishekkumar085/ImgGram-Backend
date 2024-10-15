@@ -2,9 +2,9 @@ import Post from '../schema/post.js';
 
 export const createPost = async (caption, image, user) => {
   try {
-    // const post = await Post.create({ caption, image, user });
-    const post = new Post({ caption, image, user });
-    await post.save();
+    const post = await Post.create({ caption, image, user });
+    // const post = new Post({ caption, image, user });
+    // await post.save();
     return post;
   } catch (err) {
     console.log(err);
