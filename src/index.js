@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import { PORT } from './config/serverConfig.js';
 import connectDB from './config/dbConfig.js';
-import { createPost } from './controllers/postController.js';
+import { createPost, getAllPost } from './controllers/postController.js';
 import upload from './config/multerConfig.js';
 
 const app = express();
@@ -18,6 +18,7 @@ app.get('/ping', (req, res) => {
 });
 
 app.post('/post', upload.single('image'), createPost);
+app.get('/post', getAllPost);
 app.listen(PORT, () => {
   console.log('Server listening on Port', PORT);
   connectDB();
