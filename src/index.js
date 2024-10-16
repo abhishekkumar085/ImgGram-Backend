@@ -2,8 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import { PORT } from './config/serverConfig.js';
 import connectDB from './config/dbConfig.js';
-import { createPost, getAllPost } from './controllers/postController.js';
-import upload from './config/multerConfig.js';
+import apiRouter from './routers/apiRouter.js';
 
 const app = express();
 app.use(express.json());
@@ -17,8 +16,7 @@ app.get('/ping', (req, res) => {
   return res.json({ message: 'Pong' });
 });
 
-app.post('/post', upload.single('image'), createPost);
-app.get('/post', getAllPost);
+app.use('/api', apiRouter);
 app.listen(PORT, () => {
   console.log('Server listening on Port', PORT);
   connectDB();
