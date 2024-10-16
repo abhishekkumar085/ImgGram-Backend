@@ -18,6 +18,29 @@ export const findAllPost = async () => {
     console.log(error);
   }
 };
+// find post in paginated formated --- applying pagination in our api...
+export const findAllPostPaginated = async (offset, limit) => {
+  try {
+    const post = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(offset)
+      .limit(limit);
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// count total posts
+
+export const countAllPosts = async () => {
+  try {
+    const count = await Post.countDocuments();
+    return count;
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const findPostById = async (id) => {
   try {
     const post = await Post.findById(id);

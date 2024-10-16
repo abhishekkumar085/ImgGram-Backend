@@ -1,5 +1,6 @@
 import {
   createPostService,
+  getAllPostInPaginatedService,
   getAllPostService,
 } from '../services/postService.js';
 import cloudinary from '../config/cloudinaryConfig.js';
@@ -73,15 +74,34 @@ export const getAllPost = async (req, res) => {
       message: 'Posts retrieved successfully!',
       posts,
     });
-    
   } catch (error) {
     console.error('Error retrieving posts:', error);
 
     return res.status(500).json({
       success: false,
       message: 'Internal server error',
-      error: error.message, 
+      error: error.message,
     });
   }
 };
 
+export const getAllPostInPaginatedForm = async (req, res) => {
+  try {
+    const limit = req.query.limit || 10;
+    const offset = req.query.offset || 0;
+
+    const paginatedPost = await getAllPostInPaginatedService(offset, limit);
+
+    return res.status(200).json({
+      success: true,
+      message: 'All Posts fetched successfully!!',
+      data: paginatedPost,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: 'something went wrong!!',
+      error: err.message,
+    });
+  }
+};

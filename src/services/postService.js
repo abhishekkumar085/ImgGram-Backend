@@ -1,4 +1,9 @@
-import { createPost, findAllPost } from '../repositories/postRepository.js';
+import {
+  countAllPosts,
+  createPost,
+  findAllPost,
+  findAllPostPaginated,
+} from '../repositories/postRepository.js';
 
 export const createPostService = async (createPostObj) => {
   try {
@@ -18,4 +23,17 @@ export const getAllPostService = async () => {
   } catch (err) {
     console.log(err);
   }
+};
+
+export const getAllPostInPaginatedService = async (offset, limit) => {
+  const posts = await findAllPostPaginated(offset, limit);
+  const totalDocuments = await countAllPosts();
+
+  const totalPages = Math.ceil(totalDocuments / limit);
+
+  return {
+    posts,
+    totalDocuments,
+    totalPages,
+  };
 };
