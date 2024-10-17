@@ -1,7 +1,10 @@
 import {
   createPostService,
+  deletePostService,
+  findSinglePost,
   getAllPostInPaginatedService,
   getAllPostService,
+  updatePostService,
 } from '../services/postService.js';
 import cloudinary from '../config/cloudinaryConfig.js';
 import fs from 'fs/promises';
@@ -105,3 +108,70 @@ export const getAllPostInPaginatedForm = async (req, res) => {
     });
   }
 };
+
+export const updatePostController = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const postObj = req.body;
+    const existingPost = await findSinglePost(id);
+    if (!existingPost) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found!',
+      });
+    }
+    if (existingPost.image) {
+      const publicId = extractPublicId(existingPost.image);
+      await cloudinary.uploader.destroy(publicId);
+    }
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'img',
+      });
+      postObj.image = result.secure_url;
+      fs.rm(`uploads/${req.file.filename}`);
+    }
+    const response = await updatePostService(id, postObj);
+    return res.status(200).json({
+      success: true,
+      message: 'Post updated successfully!',
+      data: response,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: 'Something went wrong!',
+      error: error.message,
+    });
+  }
+};
+const extractPublicId = (imageUrl) => {
+  const parts = imageUrl.split('/');
+  return parts[parts.length - 1].split('.')[0];
+};
+
+export async function deletePost(req, res) {
+  try {
+    const postId = req.params.id;
+    const response = await deletePostService(postId);
+    console.log(response, 'cntr');
+    if (!response) {
+      return res.status(404).json({
+        success: false,
+        message: 'post not found!',
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'post deleted successfullly!!',
+      data: response,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
+}

@@ -62,6 +62,14 @@ export const findByPostByUserId = async (userId) => {
   }
 };
 
+export const updatePost = async (id, postObj) => {
+  try {
+    const post = await Post.findByIdAndUpdate(id, postObj, { new: true });
+    return post;
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const deletePostById = async (id) => {
   try {
     const post = await Post.findByIdAndDelete(id);

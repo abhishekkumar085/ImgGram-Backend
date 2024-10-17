@@ -1,8 +1,11 @@
 import {
   countAllPosts,
   createPost,
+  deletePostById,
   findAllPost,
   findAllPostPaginated,
+  findPostById,
+  updatePost,
 } from '../repositories/postRepository.js';
 
 export const createPostService = async (createPostObj) => {
@@ -36,4 +39,19 @@ export const getAllPostInPaginatedService = async (offset, limit) => {
     totalDocuments,
     totalPages,
   };
+};
+
+export const updatePostService = async (id, postObj) => {
+  const updatedPost = await updatePost(id, postObj);
+  return updatedPost;
+};
+
+export const deletePostService = async (id) => {
+  const response = await deletePostById(id);
+  return response;
+};
+
+export const findSinglePost = async (id) => {
+  const response = await findPostById(id);
+  return response;
 };
