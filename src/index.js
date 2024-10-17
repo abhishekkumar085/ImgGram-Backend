@@ -8,9 +8,11 @@ const app = express();
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded());
-app.use(
-  morgan(':method :url :status :res[content-length] - :response-time ms')
-);
+// app.use(
+//   morgan(':method :url :status :res[content-length] - :response-time ms')
+// );
+
+app.use(morgan('combined'));
 
 app.get('/ping', (req, res) => {
   return res.json({ message: 'Pong' });
