@@ -21,7 +21,7 @@ export const signinUserService = async (userDetails) => {
   try {
     //1. check if there is  valid register with email
     const user = await findUserByEmail(userDetails.email);
-   
+
     if (!user) {
       throw {
         status: 404,
@@ -33,7 +33,7 @@ export const signinUserService = async (userDetails) => {
       userDetails.password,
       user.password
     );
- 
+
     if (!isPasswordValid) {
       throw {
         status: 401,
@@ -49,5 +49,14 @@ export const signinUserService = async (userDetails) => {
     return token;
   } catch (error) {
     throw error;
+  }
+};
+
+export const checkIfUserExists = async (email) => {
+  try {
+    const user = await findUserByEmail(email);
+    return user;
+  } catch (error) {
+    console.log(error);
   }
 };
