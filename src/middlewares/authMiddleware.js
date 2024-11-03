@@ -10,7 +10,6 @@ export const isAuthenticated = async (req, res, next) => {
       message: 'Token is required!',
     });
   }
-
   try {
     const response = verifyJWT(token);
     req.user = response;
@@ -29,4 +28,14 @@ export const isAuthenticated = async (req, res, next) => {
       message: 'Invalid token!',
     });
   }
+};
+
+export const isAdmin = async (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized!',
+    });
+  }
+  next();
 };

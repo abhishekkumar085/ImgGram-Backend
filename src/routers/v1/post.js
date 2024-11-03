@@ -10,7 +10,7 @@ import {
 import upload from '../../config/multerConfig.js';
 import { validate } from '../../Validators/zodValidator.js';
 import { zodPostSchema } from '../../Validators/zodPostSchema.js';
-import { isAuthenticated } from '../../middlewares/authMiddleware.js';
+import { isAdmin, isAuthenticated } from '../../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -22,7 +22,13 @@ router.post(
   createPost
 );
 router.get('/', getAllPostInPaginatedForm);
-router.put('/:id', upload.single('image'), updatePostController);
+router.put(
+  '/:id',
+  isAuthenticated,
+  isAdmin,
+  upload.single('image'),
+  updatePostController
+);
 router.delete('/:id', isAuthenticated, deletePost);
 
 export default router;
