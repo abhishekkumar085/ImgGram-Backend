@@ -24,7 +24,7 @@ export const findAllPostPaginated = async (offset, limit) => {
     const post = await Post.find()
       .sort({ createdAt: -1 })
       .skip(offset)
-      .limit(limit);
+      .limit(limit).populate("user",'username email _id')
     return post;
   } catch (error) {
     console.log(error);

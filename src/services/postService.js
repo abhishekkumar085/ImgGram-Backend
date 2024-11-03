@@ -12,7 +12,8 @@ export const createPostService = async (createPostObj) => {
   try {
     const caption = createPostObj.caption?.trim();
     const image = createPostObj.image;
-    const post = await createPost(caption, image);
+    const user = createPostObj.user;
+    const post = await createPost(caption, image, user);
     return post;
   } catch (err) {
     console.log(err);
@@ -46,7 +47,16 @@ export const updatePostService = async (id, postObj) => {
   return updatedPost;
 };
 
-export const deletePostService = async (id) => {
+export const deletePostService = async (id, user) => {
+  const post = await findPostById(id);
+
+  if (post.user.toString() !== user.toString()) {
+    throw {
+      status: 401,
+      message: 'Unauthorized!',
+    };
+  }
+
   const response = await deletePostById(id);
   return response;
 };
