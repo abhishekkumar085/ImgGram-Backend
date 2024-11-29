@@ -8,14 +8,21 @@ import { isAuthenticated } from './middlewares/authMiddleware.js';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { options } from './utils/swaggerOptions.js';
+import rateLimit from 'express-rate-limit';
 
 // const swaggerDocs = swaggerJSDoc(options);
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 0.5 * 60 * 1000,
+  max: 5,
+});
+
+app.use(limiter);
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
-
 
 app.use(morgan('combined'));
 /**
